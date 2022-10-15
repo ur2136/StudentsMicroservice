@@ -96,6 +96,36 @@ class StudentResource:
         except:
             return 0
 
+    @staticmethod
+    def update_student_by_uni(student_dict, uni):
+        sql = "UPDATE students_db.students SET "
+
+        updateParams = ""
+        count = 1
+        args = []
+        for key, value in student_dict.items():
+            updateParams += f"{key}=%s"
+            args.append(value)
+            if count < len(student_dict):
+                updateParams += ", "
+            count = count + 1
+
+        whereParam = " WHERE UNI=%s"
+        sql = sql + updateParams + whereParam
+        args.append(uni)
+
+        conn = StudentResource._get_connection()
+        cur = conn.cursor()
+
+        try:
+            result = cur.execute(sql, args)
+            if result == 1:
+                return 1
+            else:
+                return 0
+        except:
+            return 0
+
 
 
 

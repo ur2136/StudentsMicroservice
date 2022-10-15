@@ -86,5 +86,23 @@ def delete_student_by_uni(uni):
         result = Response(json.dumps(msg), status=404, content_type="application/json")
         return result
 
+@app.route("/api/students/<uni>", methods=['PUT'])
+def update_student_by_uni(uni):
+    request_json = request.json
+    update_status = StudentResource.update_student_by_uni(request_json,uni)
+    if update_status == 1:
+        msg = {
+            "message": "Student record updated successfully!"
+        }
+        result = Response(json.dumps(msg), status=200, content_type="application/json")
+        return result
+    else:
+        msg = {
+            "status": 404,
+            "message": "Student record cannot be updated!"
+        }
+        result = Response(json.dumps(msg), status=404, content_type="application/json")
+        return result
+
 if __name__ == '__main__':
     app.run()
