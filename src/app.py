@@ -38,11 +38,12 @@ def insert_student():
         return result
 
 @app.route("/api/students", methods=['GET'])
-def get_students():
+def get_students_with_search():
     field_order_by = request.args.get('field', default='UNI', type=str)
     no_of_results = request.args.get('noOfResults', default=5, type=int)
     page_no = request.args.get('pageNo', default=1, type=int)
-    student_results = StudentResource.get_students(field_order_by, no_of_results, page_no, '')
+    search = request.args.get('search', default='', type=str)
+    student_results = StudentResource.get_students(field_order_by, no_of_results, page_no, search)
     if student_results is not None:
         result = Response(json.dumps(student_results), status=200, content_type="application/json")
         return result
@@ -54,19 +55,16 @@ def get_students():
         result = Response(json.dumps(msg), status=404, content_type="application/json")
         return result
 
-@app.route("/api/students/<search>", methods=['GET'])
-def get_students_with_search(search):
-    field_order_by = request.args.get('field', default='UNI', type=str)
-    no_of_results = request.args.get('noOfResults', default=5, type=int)
-    page_no = request.args.get('pageNo', default=1, type=int)
-    student_results = StudentResource.get_students(field_order_by, no_of_results, page_no, search)
-    if student_results is not None:
-        result = Response(json.dumps(student_results), status=200, content_type="application/json")
+@app.route("/api/students/<uni>", methods=['GET'])
+def get_student_by_uni(uni):
+    student_result = StudentResource.get_student_by_uni(uni)
+    if student_result is not None:
+        result = Response(json.dumps(student_result), status=200, content_type="application/json")
         return result
     else:
         msg = {
             "status": 400,
-            "message": "No data in the table"
+            "message": "No student with this UNI present"
         }
         result = Response(json.dumps(msg), status=404, content_type="application/json")
         return result

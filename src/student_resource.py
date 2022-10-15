@@ -47,7 +47,6 @@ class StudentResource:
         offset = no_of_results * (page_no - 1)
         searchParams = ""
         if search == '':
-            print('here')
             sql = "SELECT * FROM students_db.students ORDER BY {orderBy} LIMIT {noOfResults} OFFSET {offset};".format(
                 orderBy=field_order_by,
                 noOfResults=no_of_results,
@@ -65,7 +64,6 @@ class StudentResource:
                 noOfResults=no_of_results,
                 offset=offset)
 
-        print(sql)
         conn = StudentResource._get_connection()
         cur = conn.cursor()
 
@@ -75,3 +73,15 @@ class StudentResource:
             return result
         except:
             return None
+
+    @staticmethod
+    def get_student_by_uni(uni):
+        sql = "SELECT * FROM students_db.students WHERE UNI = %s;"
+        conn = StudentResource._get_connection()
+        cur = conn.cursor()
+
+        result = cur.execute(sql,uni)
+        result = cur.fetchone()
+        return result
+
+
