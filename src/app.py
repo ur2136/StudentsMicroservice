@@ -64,7 +64,24 @@ def get_student_by_uni(uni):
     else:
         msg = {
             "status": 400,
-            "message": "No student with this UNI present"
+            "message": f"No student with UNI {uni} present"
+        }
+        result = Response(json.dumps(msg), status=404, content_type="application/json")
+        return result
+
+@app.route("/api/students/<uni>", methods=['DELETE'])
+def delete_student_by_uni(uni):
+    delete_result = StudentResource.delete_student_by_uni(uni)
+    if delete_result == 1:
+        msg = {
+            "message": f"Student with UNI {uni} deleted successfully!"
+        }
+        result = Response(json.dumps(msg), status=200, content_type="application/json")
+        return result
+    else:
+        msg = {
+            "status": 400,
+            "message": f"No student with UNI {uni} present!"
         }
         result = Response(json.dumps(msg), status=404, content_type="application/json")
         return result

@@ -84,4 +84,18 @@ class StudentResource:
         result = cur.fetchone()
         return result
 
+    @staticmethod
+    def delete_student_by_uni(uni):
+        sql = "DELETE FROM students_db.students WHERE UNI = %s;"
+        conn = StudentResource._get_connection()
+        cur = conn.cursor()
+
+        try:
+            result = cur.execute(sql, uni)
+            return 1
+        except:
+            return 0
+
+
+
 
