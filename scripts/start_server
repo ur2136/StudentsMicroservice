@@ -1,0 +1,3 @@
+cd /home/ec2-user/students-microservice/
+source venv/bin/activate
+supervisord -c scripts/supervisord.conf

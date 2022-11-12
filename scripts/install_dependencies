@@ -1,0 +1,9 @@
+#!/bin/bash
+yum install -y python3-pip python3 python3-setuptools
+sudo python3 -m pip install --user --upgrade pip
+cd /home/ec2-user/students-microservice
+python3 -m venv venv
+source venv/bin/activate
+pip3 install -r requirements.txt
+pip3 install gunicorn
+pip3 install supervisor

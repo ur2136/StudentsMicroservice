@@ -5,8 +5,15 @@ from flask_cors import CORS
 from student_resource import StudentResource
 
 app = Flask(__name__)
-
 CORS(app)
+
+@app.route("/api/summary")
+def site_map():
+    links = []
+    ignore_methods = {'HEAD', 'OPTIONS'}
+    for rule in app.url_map.iter_rules():
+        links.append(f"{rule.rule} {rule.methods - ignore_methods} -> {rule.endpoint}")
+    return Response(json.dumps(sorted(links)), status=200, content_type="application/json")
 
 @app.get("/api/health")
 def hello_world():
