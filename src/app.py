@@ -7,6 +7,10 @@ from student_resource import StudentResource
 app = Flask(__name__)
 CORS(app)
 
+@app.before_request
+def before_request_func():
+    print('before_request executing!')
+    print("request = ",json.dumps(request, indent=2, default=str))
 @app.route("/api/summary")
 def site_map():
     links = []
@@ -110,6 +114,12 @@ def update_student_by_uni(uni):
         }
         result = Response(json.dumps(msg), status=404, content_type="application/json")
         return result
+
+@app.after_request
+def after_request_func(response):
+    print('after_request executing!')
+    print("response = ",json.dumps(response, indent=2, default=str))
+    return response
 
 if __name__ == '__main__':
     app.run()
