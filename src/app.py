@@ -1,11 +1,29 @@
-from flask import Flask, Response, request
+from flask import Flask, Response, request, send_from_directory
 from datetime import datetime
 import json
 from flask_cors import CORS
 from student_resource import StudentResource
+from flask_swagger_ui import get_swaggerui_blueprint
 
 app = Flask(__name__)
 CORS(app)
+
+@app.route('/static/<path:path>')
+def send_static(path):
+    return send_from_directory('static',path)
+
+### swagger specific ###
+SWAGGER_URL = '/swagger'
+API_URL = '/static/swagger.json'
+SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "Students Microservice"
+    }
+)
+app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
+### end swagger specific ###
 
 @app.before_request
 def before_request_func():

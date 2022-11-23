@@ -1,0 +1,303 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "Students Microservice",
+    "version": "1.0.0",
+    "title": "Students Microservice",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Students Request",
+      "description": "Example API for student requests"
+    }
+  ],
+  "paths": {
+    "/api/students": {
+       "parameters": [
+        {
+          "name": "field",
+          "in": "query",
+          "required": false,
+          "description": "Field value used for searching",
+          "type": "string"
+        },
+         {
+          "name": "noOfResults",
+          "in": "query",
+          "required": false,
+          "description": "No of studentResponses",
+          "type": "integer"
+        },
+         {
+           "name": "pageNo",
+           "in": "query",
+           "required": false,
+           "description": "Page no of StudentResponses",
+           "type": "integer"
+         },
+         {
+          "name": "search",
+          "in": "query",
+          "required": false,
+          "description": "Value of the field that we want to search",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Students Request"
+        ],
+        "summary": "Returns studentsResponse",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/studentsResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/students/{UNI}": {
+      "parameters": [
+        {
+          "name": "UNI",
+          "in": "path",
+          "required": true,
+          "description": "UNI of the student that we want to match",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Students Request"
+        ],
+        "summary": "Get student details with given UNI",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "UNI",
+            "required": true,
+            "description": "UNI of the student that we want to match",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/studentResponse"
+            }
+          },
+          "400": {
+            "description": "Failed. No student with this UNI present."
+          }
+        }
+      },
+      "put": {
+        "summary": "Edit a student record by UNI",
+        "tags": [
+          "Students Request"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "UNI",
+            "required": true,
+            "description": "UNI of the student that we want to update",
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "description": "Book Request Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/studentRequestPutBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/messageResponse"
+            }
+          },
+          "404": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete student record by UNI",
+        "tags": [
+          "Students Request"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "UNI",
+            "required": true,
+            "description": "UNI of the student that we want to delete",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/messageResponse"
+            }
+          },
+          "400": {
+            "description": "Failed. No student with this UNI present."
+          }
+        }
+      }
+    },
+    "/api/insert": {
+      "post": {
+        "tags": [
+          "Students Request"
+        ],
+        "summary": "Insert student record.",
+        "requestBody": {
+          "description": "Student Post Request Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/studentRequestPostBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/messageResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "messageResponse": {
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "studentRequestPostBody": {
+        "type": "object",
+        "properties": {
+          "UNI": {
+            "type": "string",
+            "format": "string"
+          },
+          "first_name": {
+            "type": "string",
+            "format": "string"
+          },
+          "middle_name": {
+            "type": "string",
+            "format": "string"
+          },
+          "last_name": {
+            "type": "string",
+            "format": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "string"
+          },
+          "school_code": {
+            "type": "string",
+            "format": "string"
+          }
+        }
+      },
+        "studentRequestPutBody": {
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "format": "string"
+          },
+          "middle_name": {
+            "type": "string",
+            "format": "string"
+          },
+          "last_name": {
+            "type": "string",
+            "format": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "string"
+          },
+          "school_code": {
+            "type": "string",
+            "format": "string"
+          }
+        }
+      },
+      "studentResponse": {
+        "type": "object",
+        "properties": {
+           "UNI": {
+            "type": "string",
+            "format": "string"
+          },
+          "first_name": {
+            "type": "string",
+            "format": "string"
+          },
+          "middle_name": {
+            "type": "string",
+            "format": "string"
+          },
+          "last_name": {
+            "type": "string",
+            "format": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "string"
+          },
+          "school_code": {
+            "type": "string",
+            "format": "string"
+          }
+        }
+      },
+      "studentsResponse": {
+        "type": "object",
+        "properties": {
+          "bookRequest": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/studentResponse"
+            }
+          }
+        }
+      }
+    }
+  }
+}
