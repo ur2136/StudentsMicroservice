@@ -4,6 +4,9 @@ import json
 from flask_cors import CORS
 from student_resource import StudentResource
 from flask_swagger_ui import get_swaggerui_blueprint
+from middleware.sns_notifications import Notifications
+
+sns_middleware = Notifications()
 
 app = Flask(__name__)
 CORS(app)
@@ -137,6 +140,7 @@ def update_student_by_uni(uni):
 def after_request_func(response):
     print('after_request executing!')
     print("response = ",json.dumps(response, indent=2, default=str))
+    sns_middleware.check_publish(request, response)
     return response
 
 if __name__ == '__main__':
