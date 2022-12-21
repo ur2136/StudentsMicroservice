@@ -119,7 +119,7 @@ class StudentResource:
 
         try:
             result = cur.execute(sql, args)
-            if result == 1:
+            if result <= 1:
                 return 1
             else:
                 return 0
