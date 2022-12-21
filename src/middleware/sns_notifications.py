@@ -25,7 +25,7 @@ class Notifications():
 
     def check_publish(self, request, response):
         if self.s_topic:
-            if request.method in ['PUT','POST','DELETE']:
+            if request.method in ['PUT','POST']:
                 event = {
                     "URL": request.url,
                     "Method": request.method
