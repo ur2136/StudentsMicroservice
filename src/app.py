@@ -75,9 +75,12 @@ def get_students_with_search():
     no_of_results = request.args.get('noOfResults', default=5, type=int)
     page_no = request.args.get('pageNo', default=1, type=int)
     search = request.args.get('search', default='', type=str)
-    student_results = StudentResource.get_students(field_order_by, no_of_results, page_no, search)
+    student_results, total_records = StudentResource.get_students(field_order_by, no_of_results, page_no, search)
     if student_results is not None:
-        result = Response(json.dumps(student_results), status=200, content_type="application/json")
+        result = Response(json.dumps({
+            "result": student_results,
+            "_total_records": total_records
+        }), status=200, content_type="application/json")
         return result
     else:
         msg = {

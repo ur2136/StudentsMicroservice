@@ -1,5 +1,14 @@
 import pymysql
 
+def pagination_wrapper(result, num_results, page_no):
+    # Hack to get the total number of records as well - required by UI
+    if not result:
+        return [], 0
+    if num_results is None:
+        return result, len(result)
+    offset = num_results * (page_no - 1)
+    limit = offset + num_results + 1
+    return result[offset:limit], len(result)
 
 class StudentResource:
     last_name = ""
@@ -44,13 +53,10 @@ class StudentResource:
 
     @staticmethod
     def get_students(field_order_by, no_of_results, page_no, search):
-        offset = no_of_results * (page_no - 1)
         searchParams = ""
         if search == '':
-            sql = "SELECT * FROM students_db.students ORDER BY {orderBy} LIMIT {noOfResults} OFFSET {offset};".format(
-                orderBy=field_order_by,
-                noOfResults=no_of_results,
-                offset=offset)
+            sql = "SELECT * FROM students_db.students ORDER BY {orderBy};".format(
+                orderBy=field_order_by)
         else:
             count = 1
             for val in StudentResource.field_list:
@@ -59,10 +65,8 @@ class StudentResource:
                     searchParams += " OR "
                 count = count + 1
 
-            sql = "SELECT * FROM students_db.students WHERE " + searchParams + " ORDER BY {orderBy} LIMIT {noOfResults} OFFSET {offset};".format(
-                orderBy=field_order_by,
-                noOfResults=no_of_results,
-                offset=offset)
+            sql = "SELECT * FROM students_db.students WHERE " + searchParams + " ORDER BY {orderBy};".format(
+                orderBy=field_order_by)
 
         conn = StudentResource._get_connection()
         cur = conn.cursor()
@@ -70,9 +74,9 @@ class StudentResource:
         try:
             result = cur.execute(sql)
             result = cur.fetchall()
-            return result
+            return pagination_wrapper(result, no_of_results, page_no)
         except:
-            return None
+            return None, 0
 
     @staticmethod
     def get_student_by_uni(uni):
